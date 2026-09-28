@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>The Green Glass Door</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>The Green Glass Door</h1>
+
+    <label for="word">Enter a word:</label>
+    <input id="word" type="text" placeholder="e.g. letter" autofocus>
+    <button id="check">Check</button>
+
+    <p id="result" aria-live="polite"></p>
+
+    <div id="guess-area" hidden>
+      <p>Would you like to guess the riddle?</p>
+      <input id="guess" type="text" placeholder="Your guess">
+      <button id="submit-guess">Submit guess</button>
+      <p id="guess-result"></p>
+    </div>
+
+    <p><small>Every 5 checks you'll be invited to guess the riddle.</small></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
