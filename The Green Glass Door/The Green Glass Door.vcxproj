@@ -30,6 +30,9 @@
     <None Include="www\script.js" />
     <None Include="www\style.css" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Yayyy - Sound Effect.mp3" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

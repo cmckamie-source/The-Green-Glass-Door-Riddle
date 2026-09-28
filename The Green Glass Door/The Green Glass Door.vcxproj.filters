@@ -32,4 +32,9 @@
     <None Include="www\script.js" />
     <None Include="www\style.css" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Yayyy - Sound Effect.mp3">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

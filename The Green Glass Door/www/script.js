@@ -118,6 +118,75 @@ function hasAdjacentDuplicates(word) {
 
 // create a simple confetti effect by adding small colored divs that
 // fall using a CSS animation. Uses #confetti-container in the DOM.
+// Also plays a confetti sound if available, with a WebAudio fallback.
+const CONFETTI_SOUND_PATH = 'sounds/confetti.mp3';
+let confettiAudio = null;
+let confettiAudioAvailable = false;
+
+function initConfettiSound() {
+  try {
+	confettiAudio = new Audio(CONFETTI_SOUND_PATH);
+	confettiAudio.preload = 'auto';
+	// if loading fails, audio element will fire an error event
+	confettiAudio.addEventListener('canplaythrough', () => { confettiAudioAvailable = true; });
+	confettiAudio.addEventListener('error', () => { confettiAudioAvailable = false; });
+	// begin loading
+	confettiAudio.load();
+  } catch (e) {
+	confettiAudio = null;
+	confettiAudioAvailable = false;
+  }
+}
+
+function playConfettiSound() {
+  if (confettiAudio && confettiAudioAvailable) {
+	try {
+	  confettiAudio.currentTime = 0;
+	  confettiAudio.play().catch(() => {
+		// if play is blocked, try WebAudio fallback
+		playConfettiToneFallback();
+	  });
+	  return;
+	} catch (e) {
+	  // fall through to fallback
+	}
+  }
+  playConfettiToneFallback();
+}
+
+function playConfettiToneFallback() {
+  // simple celebratory chord using WebAudio
+  try {
+	const AudioCtx = window.AudioContext || window.webkitAudioContext;
+	const ctx = new AudioCtx();
+	const now = ctx.currentTime;
+	const master = ctx.createGain();
+	master.gain.setValueAtTime(0.0001, now);
+	master.gain.exponentialRampToValueAtTime(0.6, now + 0.02);
+	master.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+	master.connect(ctx.destination);
+
+	const freqs = [880, 1320, 1760]; // short major-ish chord
+	freqs.forEach((f, i) => {
+	  const osc = ctx.createOscillator();
+	  const g = ctx.createGain();
+	  osc.type = 'sine';
+	  osc.frequency.setValueAtTime(f * (1 + (Math.random() - 0.5) * 0.02), now);
+	  g.gain.setValueAtTime(0.0001, now);
+	  g.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
+	  g.gain.exponentialRampToValueAtTime(0.0001, now + 1.0 + Math.random() * 0.5);
+	  osc.connect(g);
+	  g.connect(master);
+	  osc.start(now + i * 0.03);
+	  osc.stop(now + 1.05 + Math.random() * 0.5);
+	});
+	// close context after a while to free resources
+	setTimeout(() => { try { ctx.close(); } catch (_) {} }, 2000);
+  } catch (e) {
+	// silent fail if no WebAudio available
+  }
+}
+
 function launchConfetti(count = 80) {
   const container = document.getElementById('confetti-container');
   if (!container) return;
@@ -146,9 +215,13 @@ function launchConfetti(count = 80) {
 	  el.remove();
 	});
   }
+  // play sound
+  playConfettiSound();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  // initialize confetti sound (attempt to load sounds/confetti.mp3)
+  initConfettiSound();
 	// generate decorative shards behind the content
   generateShards(36);
 
