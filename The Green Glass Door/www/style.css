@@ -42,3 +42,11 @@ small { color: #155724; }
 .badge { font-size: 0.85rem; padding: 0.15rem 0.4rem; border-radius: 4px; }
 .badge.pass { background: #c8e6c9; color: #165f2b; }
 .badge.fail { background: #ffcccc; color: #7a1c1c; }
+
+.list-controls { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.list-controls input { flex: 1; padding: 0.35rem; border: 1px solid rgba(27,94,32,0.12); border-radius: 4px; }
+.list-controls button { background: #2e7d32; color: #fff; border: none; padding: 0.35rem 0.6rem; border-radius: 4px; }
+.list-select { display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.5rem; }
+.list-select select { padding: 0.25rem; border-radius: 4px; }
+.list-select button { padding: 0.25rem 0.45rem; border-radius: 4px; }
+.sidebar li { align-items: center; }
