@@ -2,10 +2,48 @@
 // and after every 5 attempts allow guessing the riddle answer.
 
 const ANSWER = "double letters"; // matches Answers::getAnswer()
-let attempts = 0;
 
 function normalize(s) {
   return s.trim().toLowerCase();
+}
+
+// Accept many possible phrasings for the correct answer.
+function isCorrectGuess(guess) {
+  const g = normalize(guess);
+  if (!g) return false;
+
+  // common exact variants
+  const accepted = new Set([
+	'double letters', 'double letter', 'double-letters', 'double-letter',
+	'double characters', 'double character', 'same letter twice', 'same letters',
+	'same letter', 'same letter twice', 'letters repeated', 'repeated letters',
+	'letter repeated', 'letters that are doubled', 'words with double letters',
+	'words with double characters', 'two identical letters', 'two same letters',
+	'letter twice', 'double characters', 'double characters rule'
+  ]);
+  if (accepted.has(g)) return true;
+
+  // remove punctuation for regex tests
+  const clean = g.replace(/[^a-z0-9\s-]/g, ' ');
+
+  // regex-based heuristics for many phrasings
+  const reDouble = /double.*(letter|letters|character|characters|consonant|vowel)/;
+  const reSame = /(same|identical|two|twice|repeat|repeated).*(letter|letters|character|characters)/;
+  const reBack = /(back[\s-]?to[\s-]?back|backto ?back|back[- ]back|adjacent|consecutive|next to each other)/;
+  const reLetter = /(letter|letters|character|characters|char)/;
+
+  if (reDouble.test(clean)) return true;
+  if (reSame.test(clean)) return true;
+  if (reBack.test(clean) && reLetter.test(clean)) return true;
+
+  // tokens-based fallback: both 'double' and a letter-word present
+  const tokens = clean.split(/\s+/);
+  if (tokens.includes('double') && tokens.some(t => ['letter','letters','character','characters','char'].includes(t))) return true;
+
+  // phrases like 'the same letters' or 'the same letter twice'
+  if (/(the same).*(letter|letters|character|characters)/.test(clean)) return true;
+
+  return false;
 }
 
 function hasAdjacentDuplicates(word) {
@@ -76,15 +114,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	// clear input and focus for next word
 	wordEl.value = '';
 	wordEl.focus();
-
-	attempts++;
 	guessResult.textContent = '';
-
-	if (attempts % 5 === 0) {
-	  guessArea.hidden = false;
-	} else {
-	  guessArea.hidden = true;
-	}
   });
 
   // --- single-list management and persistence ---
@@ -157,7 +187,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	  guessResult.textContent = 'Please enter a guess.';
 	  return;
 	}
-	if (g === normalize(ANSWER)) {
+	if (isCorrectGuess(g)) {
 	  guessResult.textContent = 'Congrats! you solved the riddle :)';
 	  // celebrate
 	  launchConfetti(100);
