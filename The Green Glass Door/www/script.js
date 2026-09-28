@@ -7,6 +7,47 @@ function normalize(s) {
   return s.trim().toLowerCase();
 }
 
+// decorative glass shards generation
+function makeShardShape() {
+  // produce a few variant clip-paths for variety
+  const shapes = [
+	'polygon(50% 0%, 100% 25%, 80% 100%, 20% 100%, 0% 25%)',
+	'polygon(60% 0%, 100% 10%, 90% 60%, 50% 100%, 10% 60%, 0% 10%)',
+	'polygon(40% 0%, 100% 30%, 75% 100%, 25% 100%, 0% 30%)',
+	'polygon(50% 0%, 85% 20%, 100% 60%, 70% 100%, 30% 100%, 0% 60%, 15% 20%)'
+  ];
+  return shapes[Math.floor(Math.random() * shapes.length)];
+}
+
+function generateShards(count = 30) {
+  const container = document.getElementById('shards');
+  if (!container) return;
+  container.innerHTML = '';
+  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+  const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+  for (let i = 0; i < count; ++i) {
+	const s = document.createElement('div');
+	s.className = 'shard';
+	const w = 20 + Math.floor(Math.random() * 140); // width px
+	const h = Math.floor(w * (0.6 + Math.random() * 1.2));
+	const left = Math.random() * vw;
+	const top = Math.random() * vh;
+	s.style.width = w + 'px';
+	s.style.height = h + 'px';
+	s.style.left = (left - w/2) + 'px';
+	s.style.top = (top - h/2) + 'px';
+	s.style.clipPath = makeShardShape();
+	// subtle tint variation
+	const tint = 180 + Math.floor(Math.random() * 60);
+	s.style.background = `linear-gradient(180deg, rgba(255,255,255,0.9), rgba(${tint},255,${tint/1.5},0.15))`;
+	s.style.opacity = (0.06 + Math.random() * 0.18).toFixed(2);
+	s.style.transform = `rotate(${Math.floor(Math.random()*360)}deg)`;
+	const dur = 4000 + Math.floor(Math.random() * 8000);
+	s.style.animation = `shard-drift ${dur}ms ease-in-out ${Math.floor(Math.random()*2000)}ms infinite`;
+	container.appendChild(s);
+  }
+}
+
 // Accept many possible phrasings for the correct answer.
 function isCorrectGuess(guess) {
   const g = normalize(guess);
@@ -87,6 +128,9 @@ function launchConfetti(count = 80) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+	// generate decorative shards behind the content
+  generateShards(36);
+
   const wordEl = document.getElementById('word');
   const checkBtn = document.getElementById('check');
   const resultEl = document.getElementById('result');
