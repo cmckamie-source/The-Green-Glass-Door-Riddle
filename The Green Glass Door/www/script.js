@@ -16,6 +16,38 @@ function hasAdjacentDuplicates(word) {
   return { has_adjacent: false };
 }
 
+// create a simple confetti effect by adding small colored divs that
+// fall using a CSS animation. Uses #confetti-container in the DOM.
+function launchConfetti(count = 80) {
+  const container = document.getElementById('confetti-container');
+  if (!container) return;
+  const colors = ['#ff5252','#ffb74d','#ffd54f','#c8e6c9','#81c784','#4caf50','#66bb6a','#7e57c2'];
+  for (let i = 0; i < count; ++i) {
+	const el = document.createElement('div');
+	el.className = 'confetti';
+	const color = colors[Math.floor(Math.random() * colors.length)];
+	el.style.background = color;
+	// random horizontal start between 0% and 100%
+	el.style.left = Math.random() * 100 + '%';
+	// random size
+	const w = 6 + Math.floor(Math.random() * 10);
+	el.style.width = w + 'px';
+	el.style.height = Math.floor(w * 1.4) + 'px';
+	// random animation duration and delay
+	const dur = 900 + Math.floor(Math.random() * 900);
+	const delay = Math.floor(Math.random() * 300);
+	el.style.animationDuration = dur + 'ms';
+	el.style.animationDelay = delay + 'ms';
+	// slight horizontal offset via transform translateX set initially
+	el.style.transform = 'translateY(-10vh) rotate(' + (Math.random() * 360) + 'deg)';
+	container.appendChild(el);
+	// remove after animation
+	el.addEventListener('animationend', () => {
+	  el.remove();
+	});
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const wordEl = document.getElementById('word');
   const checkBtn = document.getElementById('check');
@@ -127,6 +159,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 	if (g === normalize(ANSWER)) {
 	  guessResult.textContent = 'Congrats! you solved the riddle :)';
+	  // celebrate
+	  launchConfetti(100);
 	} else {
 	  guessResult.textContent = 'Try Again :(';
 	}
