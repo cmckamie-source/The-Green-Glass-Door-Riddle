@@ -78,7 +78,7 @@ small { color: #155724; }
   position: absolute;
   transform-origin: center;
   /* stronger baseline opacity so green shards are visible */
-  opacity: 5;
+  opacity: 100;
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12));
   will-change: transform, opacity;
   /* default green gradient; per-shard script will tweak shades */
