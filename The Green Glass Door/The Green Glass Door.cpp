@@ -61,11 +61,7 @@ int main() {
 		} else {
 			std::cout << "No, this cannot go through the Green Glass Door." << std::endl;
 		}
-
-		++attempts;
-		// Every 5 attempts offer the user a chance to guess the riddle answer
-		if (attempts % 5 == 0) {
-
+		
 			std::string resp;
 			std::cout << "Would you like to guess the riddle? (y/n): ";
 			if (!std::getline(std::cin, resp)) break;
@@ -88,7 +84,7 @@ int main() {
 					std::cout << "Try Again:(" << std::endl;
 				}
 			}
-		}
+		
 	}
 	std::cout << "Thanks for playing the Green Glass Door!\n";
 	std::cout << "Made by Christian McKamie" << std::endl;
