@@ -119,41 +119,40 @@ function hasAdjacentDuplicates(word) {
 // create a simple confetti effect by adding small colored divs that
 // fall using a CSS animation. Uses #confetti-container in the DOM.
 // Also plays a confetti sound if available, with a WebAudio fallback.
-// Use the project-supplied MP3 (located at project root). Path is relative to www/index.html
-const CONFETTI_SOUND_PATH = '../Yayyy - Sound Effect.mp3';
+// Try multiple candidate paths so the bundled MP3 can be found whether you
+// serve the site from the www folder or from the project root.
+const CONFETTI_SOUND_CANDIDATES = [
+  'sounds/confetti.mp3',                 // if you put the file under www/sounds/
+  '../Yayyy - Sound Effect.mp3',         // originally present at project root
+  'Yayyy - Sound Effect.mp3'             // if serving from project root
+];
 let confettiAudio = null;
-let confettiAudioAvailable = false;
 
 function initConfettiSound() {
-	try {
+  try {
 	confettiAudio = new Audio();
-	// ensure proper URI encoding for spaces and special characters
-	confettiAudio.src = encodeURI(CONFETTI_SOUND_PATH);
 	confettiAudio.preload = 'auto';
-	// if loading fails, audio element will fire an error event
-	confettiAudio.addEventListener('canplaythrough', () => { confettiAudioAvailable = true; });
-	confettiAudio.addEventListener('error', () => { confettiAudioAvailable = false; });
-	// begin loading
-	confettiAudio.load();
   } catch (e) {
 	confettiAudio = null;
-	confettiAudioAvailable = false;
   }
 }
 
-function playConfettiSound() {
-  if (confettiAudio && confettiAudioAvailable) {
-	try {
-	  confettiAudio.currentTime = 0;
-	  confettiAudio.play().catch(() => {
-		// if play is blocked, try WebAudio fallback
-		playConfettiToneFallback();
-	  });
-	  return;
-	} catch (e) {
-	  // fall through to fallback
+async function playConfettiSound() {
+  // Try to play the first working candidate via the audio element.
+  if (confettiAudio) {
+	for (const candidate of CONFETTI_SOUND_CANDIDATES) {
+	  try {
+		confettiAudio.src = encodeURI(candidate);
+		confettiAudio.currentTime = 0;
+		await confettiAudio.play();
+		return; // success
+	  } catch (e) {
+		// try next candidate
+		continue;
+	  }
 	}
   }
+  // Fallback to WebAudio tone if none of the files could be played.
   playConfettiToneFallback();
 }
 
