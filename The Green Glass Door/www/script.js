@@ -37,10 +37,12 @@ function generateShards(count = 30) {
 	s.style.left = (left - w/2) + 'px';
 	s.style.top = (top - h/2) + 'px';
 	s.style.clipPath = makeShardShape();
-	// subtle tint variation
-	const tint = 180 + Math.floor(Math.random() * 60);
-	s.style.background = `linear-gradient(180deg, rgba(255,255,255,0.9), rgba(${tint},255,${tint/1.5},0.15))`;
-	s.style.opacity = (0.06 + Math.random() * 0.18).toFixed(2);
+	// stronger green tint variation for visibility
+	const gBase = 140 + Math.floor(Math.random() * 80); // 140-219
+	const gTop = Math.min(255, gBase + 30);
+	s.style.background = `linear-gradient(180deg, rgba(240,255,240,0.98), rgba(120,${gBase},100,0.45))`;
+	// slightly higher opacity range so shards are visible
+	s.style.opacity = (0.12 + Math.random() * 0.22).toFixed(2);
 	s.style.transform = `rotate(${Math.floor(Math.random()*360)}deg)`;
 	const dur = 4000 + Math.floor(Math.random() * 8000);
 	s.style.animation = `shard-drift ${dur}ms ease-in-out ${Math.floor(Math.random()*2000)}ms infinite`;
