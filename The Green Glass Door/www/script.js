@@ -25,13 +25,32 @@ function generateShards(count = 30) {
   container.innerHTML = '';
   const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
   const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+	// avoid covering the intro (riddle) area
+  const introEl = document.querySelector('.intro');
+  const introRect = introEl ? introEl.getBoundingClientRect() : null;
+  function rectsIntersect(a, b) {
+	return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
+  }
   for (let i = 0; i < count; ++i) {
 	const s = document.createElement('div');
 	s.className = 'shard';
 	const w = 20 + Math.floor(Math.random() * 140); // width px
 	const h = Math.floor(w * (0.6 + Math.random() * 1.2));
-	const left = Math.random() * vw;
-	const top = Math.random() * vh;
+	// try a few times to place shard outside introRect
+	let left, top, attempts = 0;
+	do {
+	  left = Math.random() * vw;
+	  top = Math.random() * vh;
+	  attempts++;
+	  // compute shard rect
+	  var shardRect = { left: left - w/2, top: top - h/2, right: left - w/2 + w, bottom: top - h/2 + h };
+	  // if no introRect, break
+	  if (!introRect) break;
+	  // slightly expand intro area to provide padding
+	  const padding = 12;
+	  const expandedIntro = { left: introRect.left - padding, top: introRect.top - padding, right: introRect.right + padding, bottom: introRect.bottom + padding };
+	  if (!rectsIntersect(shardRect, expandedIntro)) break;
+	} while (attempts < 12);
 	s.style.width = w + 'px';
 	s.style.height = h + 'px';
 	s.style.left = (left - w/2) + 'px';
