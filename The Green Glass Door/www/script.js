@@ -55,18 +55,14 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
   });
 
-	// --- list management and persistence ---
+  // --- single-list management and persistence ---
   const STORAGE_KEY = 'ggd_lists_v1';
   const defaultListName = 'Default';
-  const listsSelect = document.getElementById('lists');
-  const createListBtn = document.getElementById('create-list');
-  const newListInput = document.getElementById('new-list-name');
-  const deleteListBtn = document.getElementById('delete-list');
   const clearListBtn = document.getElementById('clear-list');
   const historyEl = document.getElementById('history');
 
-  let lists = {}; // map name -> array of entries
-  let activeList = null;
+  let lists = {}; // only Default list will be kept
+  let activeList = defaultListName;
 
   function loadLists() {
 	try {
@@ -76,29 +72,18 @@ window.addEventListener('DOMContentLoaded', () => {
 	  lists = {};
 	}
 	if (!lists || typeof lists !== 'object') lists = {};
-	if (!Object.keys(lists).length) lists[defaultListName] = [];
+	if (!lists[defaultListName]) lists[defaultListName] = [];
+	// enforce single list: remove any other keys
+	Object.keys(lists).forEach(k => { if (k !== defaultListName) delete lists[k]; });
   }
 
   function saveLists() {
 	localStorage.setItem(STORAGE_KEY, JSON.stringify(lists));
   }
 
-  function renderListOptions() {
-	listsSelect.innerHTML = '';
-	Object.keys(lists).forEach(name => {
-	  const opt = document.createElement('option');
-	  opt.value = name;
-	  opt.textContent = name;
-	  listsSelect.appendChild(opt);
-	});
-	if (!activeList || !lists[activeList]) activeList = Object.keys(lists)[0];
-	listsSelect.value = activeList;
-  }
-
   function renderHistory() {
 	historyEl.innerHTML = '';
-	if (!activeList || !lists[activeList]) return;
-	const entries = lists[activeList];
+	const entries = lists[activeList] || [];
 	// newest first
 	for (let i = entries.length - 1; i >= 0; --i) {
 	  const e = entries[i];
@@ -106,70 +91,29 @@ window.addEventListener('DOMContentLoaded', () => {
 	  li.className = e.passed ? 'correct' : 'incorrect';
 	  const spanWord = document.createElement('span');
 	  spanWord.textContent = e.word;
-		const badge = document.createElement('span');
+	  const badge = document.createElement('span');
 	  badge.className = 'badge ' + (e.passed ? 'pass' : 'fail');
 	  badge.textContent = e.passed ? 'pass' : 'fail';
-		li.appendChild(spanWord);
+	  li.appendChild(spanWord);
 	  li.appendChild(badge);
 	  historyEl.appendChild(li);
 	}
   }
 
   function addHistoryEntry(word, passed) {
-	if (!activeList) activeList = defaultListName;
 	if (!lists[activeList]) lists[activeList] = [];
 	lists[activeList].push({ word: word, passed: !!passed, time: Date.now() });
 	saveLists();
 	renderHistory();
   }
 
-  function removeEntry(index) {
-	// removed: per-entry delete feature disabled
-	return;
-  }
-
   // initial load
   loadLists();
-  activeList = Object.keys(lists)[0];
-  renderListOptions();
   renderHistory();
 
-  // create/delete/clear list handlers
-  createListBtn.addEventListener('click', () => {
-	const name = (newListInput.value || '').trim();
-	if (!name) return;
-	if (lists[name]) {
-	  alert('A list with that name already exists');
-	  return;
-	}
-	lists[name] = [];
-	activeList = name;
-	saveLists();
-	renderListOptions();
-	renderHistory();
-	newListInput.value = '';
-  });
-
-  listsSelect.addEventListener('change', () => {
-	activeList = listsSelect.value;
-	renderHistory();
-  });
-
-  deleteListBtn.addEventListener('click', () => {
-	if (!activeList) return;
-	if (!confirm('Delete list "' + activeList + '"? This cannot be undone.')) return;
-	delete lists[activeList];
-	// ensure at least one list remains
-	if (!Object.keys(lists).length) lists[defaultListName] = [];
-	activeList = Object.keys(lists)[0];
-	saveLists();
-	renderListOptions();
-	renderHistory();
-  });
-
+  // clear list handler
   clearListBtn.addEventListener('click', () => {
-	if (!activeList) return;
-	if (!confirm('Clear all entries in list "' + activeList + '"?')) return;
+	if (!confirm('Clear all entries in the list?')) return;
 	lists[activeList] = [];
 	saveLists();
 	renderHistory();

@@ -43,10 +43,22 @@ small { color: #155724; }
 .badge.pass { background: #c8e6c9; color: #165f2b; }
 .badge.fail { background: #ffcccc; color: #7a1c1c; }
 
-.list-controls { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-.list-controls input { flex: 1; padding: 0.35rem; border: 1px solid rgba(27,94,32,0.12); border-radius: 4px; }
-.list-controls button { background: #2e7d32; color: #fff; border: none; padding: 0.35rem 0.6rem; border-radius: 4px; }
-.list-select { display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.5rem; }
-.list-select select { padding: 0.25rem; border-radius: 4px; }
-.list-select button { padding: 0.25rem 0.45rem; border-radius: 4px; }
+.list-info { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; }
+.list-info .list-name { font-weight: 600; }
+.list-info button { background: #2e7d32; color: #fff; border: none; padding: 0.35rem 0.6rem; border-radius: 4px; }
 .sidebar li { align-items: center; }
+
+/* small credit box fixed to bottom-right */
+#credit {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(11,102,35,0.92);
+  color: #fff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  opacity: 0.95;
+}

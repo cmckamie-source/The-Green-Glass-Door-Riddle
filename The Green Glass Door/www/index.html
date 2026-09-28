@@ -41,19 +41,14 @@
 
   <aside class="sidebar">
     <h2>Guessed words</h2>
-    <div class="list-controls">
-      <input id="new-list-name" type="text" placeholder="New list name">
-      <button id="create-list">Create</button>
-    </div>
-    <div class="list-select">
-      <label for="lists">Active list:</label>
-      <select id="lists"></select>
-      <button id="delete-list">Delete</button>
+    <div class="list-info">
+      <span class="list-name">List: Default</span>
       <button id="clear-list">Clear</button>
     </div>
     <ul id="history" aria-live="polite"></ul>
   </aside>
 
   <script src="script.js"></script>
+  <div id="credit" aria-hidden="true">Made by Christian McKamie</div>
 </body>
 </html>
