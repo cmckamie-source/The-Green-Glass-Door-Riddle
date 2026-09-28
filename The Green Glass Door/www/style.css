@@ -1,7 +1,44 @@
-body { font-family: Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
-main { background: #fff; padding: 1.5rem; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-h1 { margin-top: 0; }
-input[type="text"] { padding: .4rem .6rem; font-size: 1rem; }
-button { padding: .4rem .8rem; margin-left: .5rem; }
-#result, #guess-result { font-weight: bold; margin-top: 1rem; }
-small { color: #666; }
+body {
+  font-family: Arial, sans-serif;
+  max-width: 760px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  background: radial-gradient(circle at top left, #e8f5e9, #c8e6c9);
+  color: #073b14;
+}
+
+/* layout: main content + sidebar */
+.layout { display: grid; grid-template-columns: 1fr 260px; gap: 1rem; align-items: start; }
+
+main {
+  background: linear-gradient(180deg, #f1fff3, #e8fff0);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid #1b5e20;
+  box-shadow: 0 6px 20px rgba(27,94,32,0.12);
+}
+
+.header { display: flex; align-items: center; gap: 1rem; }
+.door-logo { width: 64px; height: 64px; flex: 0 0 64px; border-radius: 6px; }
+
+h1 { margin: 0; color: #0b6623; font-size: 1.75rem; }
+
+input[type="text"] { padding: .5rem .6rem; font-size: 1rem; border: 2px solid #2e7d32; border-radius: 4px; }
+button { padding: .5rem .9rem; margin-left: .5rem; background: #2e7d32; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
+button:hover { background: #27672a; }
+
+#result, #guess-result { font-weight: bold; margin-top: 1rem; color: #184d20; }
+small { color: #155724; }
+
+.intro { margin-top: 1rem; background: rgba(27,94,32,0.05); padding: 0.8rem; border-radius: 6px; border: 1px solid rgba(27,94,32,0.12); }
+.intro p { margin: 0 0 0.5rem 0; color: #0b3e1a; }
+
+.sidebar { background: rgba(255,255,255,0.6); border: 1px solid rgba(27,94,32,0.08); padding: 1rem; border-radius: 6px; }
+.sidebar h2 { margin-top: 0; color: #0b6623; font-size: 1.125rem; }
+.sidebar ul { list-style: none; padding: 0; margin: 0; max-height: 360px; overflow: auto; }
+.sidebar li { padding: 0.35rem 0.4rem; border-bottom: 1px dashed rgba(27,94,32,0.06); display: flex; justify-content: space-between; }
+.sidebar li.correct { background: rgba(46,125,50,0.06); color: #11411a; }
+.sidebar li.incorrect { background: rgba(244, 67, 54, 0.04); color: #5a1b1b; }
+.badge { font-size: 0.85rem; padding: 0.15rem 0.4rem; border-radius: 4px; }
+.badge.pass { background: #c8e6c9; color: #165f2b; }
+.badge.fail { background: #ffcccc; color: #7a1c1c; }

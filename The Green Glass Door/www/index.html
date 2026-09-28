@@ -8,7 +8,20 @@
 </head>
 <body>
   <main>
-    <h1>The Green Glass Door</h1>
+    <div class="header">
+      <!-- simple door logo as inline SVG -->
+      <svg class="door-logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <rect x="6" y="4" width="52" height="56" rx="4" fill="#1b5e20" />
+        <rect x="12" y="10" width="40" height="44" rx="2" fill="#2e7d32" />
+        <circle cx="46" cy="36" r="2" fill="#ffd54f" />
+      </svg>
+      <h1>The Green Glass Door</h1>
+    </div>
+    <section class="intro">
+      <p>Welcome to the Green Glass Door!</p>
+      <p>In this riddle certain things can pass through the door and some can not.</p>
+      <p>For example: you can put a <strong>boot</strong> through the door but not a <strong>shoe</strong>. What can you put through the door?</p>
+    </section>
 
     <label for="word">Enter a word:</label>
     <input id="word" type="text" placeholder="e.g. letter" autofocus>
@@ -25,6 +38,11 @@
 
     <p><small>Every 5 checks you'll be invited to guess the riddle.</small></p>
   </main>
+
+  <aside class="sidebar">
+    <h2>Guessed words</h2>
+    <ul id="history" aria-live="polite"></ul>
+  </aside>
 
   <script src="script.js"></script>
 </body>
