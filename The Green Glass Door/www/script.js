@@ -119,13 +119,16 @@ function hasAdjacentDuplicates(word) {
 // create a simple confetti effect by adding small colored divs that
 // fall using a CSS animation. Uses #confetti-container in the DOM.
 // Also plays a confetti sound if available, with a WebAudio fallback.
-const CONFETTI_SOUND_PATH = 'sounds/confetti.mp3';
+// Use the project-supplied MP3 (located at project root). Path is relative to www/index.html
+const CONFETTI_SOUND_PATH = '../Yayyy - Sound Effect.mp3';
 let confettiAudio = null;
 let confettiAudioAvailable = false;
 
 function initConfettiSound() {
-  try {
-	confettiAudio = new Audio(CONFETTI_SOUND_PATH);
+	try {
+	confettiAudio = new Audio();
+	// ensure proper URI encoding for spaces and special characters
+	confettiAudio.src = encodeURI(CONFETTI_SOUND_PATH);
 	confettiAudio.preload = 'auto';
 	// if loading fails, audio element will fire an error event
 	confettiAudio.addEventListener('canplaythrough', () => { confettiAudioAvailable = true; });
